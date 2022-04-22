@@ -18,6 +18,6 @@ pxr_plugin(${PXR_PACKAGE}
     
     CPPFILES
         register.cpp
-
         openVDBAsset.cpp
+        volume.cpp
 )

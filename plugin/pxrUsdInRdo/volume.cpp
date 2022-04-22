@@ -4,6 +4,7 @@
 
 #include "usdKatana/attrMap.h"
 #include "usdKatana/readPrim.h"
+#include "usdKatana/readXformable.h"
 #include "usdKatana/utils.h"
 
 #include "pxr/usd/usdVol/volume.h"
@@ -15,7 +16,9 @@ PXRUSDKATANA_USDIN_PLUGIN_DEFINE(
 {
     PxrUsdKatanaAttrMap attrs;
 
-    PxrUsdKatanaReadPrim(privateData.GetUsdPrim(), privateData, attrs);
+    const UsdPrim& prim = privateData.GetUsdPrim();
+    PxrUsdKatanaReadPrim(prim, privateData, attrs);
+    PxrUsdKatanaReadXformable(UsdGeomXformable(prim), privateData, attrs);
 
     attrs.toInterface(interface);
 }

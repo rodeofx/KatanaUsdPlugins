@@ -22,7 +22,7 @@ variants = [
 
 private_build_requires = ["cmake-3.12+"]
 
-uuid = "23bc9b7a-fb47-47d2-b674-aef259b77b78"
+uuid = "98fcc517-197a-4c89-a4fc-03388b83fb8d"
 
 
 def commands(env):

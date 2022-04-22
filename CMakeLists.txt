@@ -4,6 +4,12 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
                       ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules
                       ${CMAKE_CURRENT_SOURCE_DIR}/cmake/macros)
 
+# RODEO
+set(KATANA_API_LOCATION $ENV{REZ_KATANA_REAL_ROOT})
+set(USE_KATANA_THIRDPARTY_LIBS ON)
+set(PXR_PY_PACKAGE_NAME "fnpxr")
+        
+
 #Set default option value in case PXR_PY_PACKAGE_NAME is not defined
 set(PXR_PY_PACKAGE_NAME "pxr"
     CACHE

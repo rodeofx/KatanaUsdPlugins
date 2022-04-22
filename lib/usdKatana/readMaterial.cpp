@@ -614,6 +614,22 @@ _CreateShadingNode(
                 shdNodeBuilder.set(
                     "type", FnKat::StringAttribute(id.GetString()));
         }
+        else if (targetName == "arnold")
+        // Removing the arnold: prefix from the type name
+        {
+            TfToken id;
+            shaderSchema.GetIdAttr().Get(&id, currentTime);
+            if (TfStringStartsWith(id.GetString(), "arnold:"))
+            {
+                shdNodeBuilder.set(
+                        "type", FnKat::StringAttribute(id.GetString().substr(7)));
+            }
+            else
+            {
+                shdNodeBuilder.set(
+                        "type", FnKat::StringAttribute(id.GetString()));
+            }
+        }
         else
         {
             shaderSchema.GetIdAttr().Get(&id, currentTime);
@@ -876,6 +892,73 @@ _GetMaterialAttr(
         }
     }
     // XXX END
+
+    /////////////////
+    // ARNOLD SECTION
+    /////////////////
+
+    auto arnoldSurfaceSet = false;
+    static const TfToken _arnold("arnold");
+    if (UsdShadeOutput arnoldOut = materialSchema.GetSurfaceOutput(_arnold)) {
+        if (flatten || !arnoldOut.IsSourceConnectionFromBaseMaterial()) {
+            UsdShadeConnectableAPI source;
+            TfToken sourceName;
+            UsdShadeAttributeType sourceType;
+            if (arnoldOut.GetConnectedSource(&source, &sourceName,
+                                             &sourceType)) {
+                std::string handle = _CreateShadingNode(
+                        source.GetPrim(), currentTime,
+                        nodesBuilder, interfaceBuilder, layoutBuilder, "arnold", flatten);
+
+                terminalsBuilder.set("arnoldSurface",
+                                     FnKat::StringAttribute(handle));
+                terminalsBuilder.set("arnoldSurfacePort",
+                                     FnKat::StringAttribute("out"));
+                arnoldSurfaceSet = true;
+            }
+        }
+    }
+
+    if (!arnoldSurfaceSet) {
+        if (UsdShadeOutput arnoldOut = materialSchema.GetVolumeOutput(_arnold)) {
+            if (flatten || !arnoldOut.IsSourceConnectionFromBaseMaterial()) {
+                UsdShadeConnectableAPI source;
+                TfToken sourceName;
+                UsdShadeAttributeType sourceType;
+                if (arnoldOut.GetConnectedSource(&source, &sourceName,
+                                                 &sourceType)) {
+                    std::string handle = _CreateShadingNode(
+                            source.GetPrim(), currentTime,
+                            nodesBuilder, interfaceBuilder, layoutBuilder, "arnold", flatten);
+
+                    terminalsBuilder.set("arnoldSurface",
+                                         FnKat::StringAttribute(handle));
+                    terminalsBuilder.set("arnoldSurfacePort",
+                                         FnKat::StringAttribute("out"));
+                    arnoldSurfaceSet = true;
+                }
+            }
+        }
+    }
+
+    if (UsdShadeOutput arnoldOut = materialSchema.GetDisplacementOutput(_arnold)) {
+        if (flatten || !arnoldOut.IsSourceConnectionFromBaseMaterial()) {
+            UsdShadeConnectableAPI source;
+            TfToken sourceName;
+            UsdShadeAttributeType sourceType;
+            if (arnoldOut.GetConnectedSource(&source, &sourceName,
+                                             &sourceType)) {
+                std::string handle = _CreateShadingNode(
+                        source.GetPrim(), currentTime,
+                        nodesBuilder, interfaceBuilder, layoutBuilder, "arnold", flatten);
+
+                terminalsBuilder.set("arnoldDisplacement",
+                                     FnKat::StringAttribute(handle));
+                terminalsBuilder.set("arnoldDisplacementPort",
+                                     FnKat::StringAttribute("out"));
+            }
+        }
+    }
 
     // with the current implementation of ris, there are
     // no patterns that are unbound or not connected directly

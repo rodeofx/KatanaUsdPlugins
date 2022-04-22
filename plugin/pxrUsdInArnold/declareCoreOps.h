@@ -1,0 +1,8 @@
+#ifndef PXR_USDINARNOLD_DECLARECOREOPS_H
+#define PXR_USDINARNOLD_DECLARECOREOPS_H
+
+#include "usdKatana/usdInPluginRegistry.h"
+
+PXRUSDKATANA_USDIN_PLUGIN_DECLARE(PxrUsdInArnold_LocationDecorator)
+
+#endif //PXR_USDINARNOLD_DECLARECOREOPS_H

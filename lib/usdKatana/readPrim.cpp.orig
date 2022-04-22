@@ -781,30 +781,6 @@ _AddCustomProperties(
     return foundCustomProperties;
 }
 
-static bool
-_AddCustomData(
-        const UsdPrim &prim,
-        FnKat::GroupBuilder& customDataBuilder)
-{
-    bool foundCustomData = false;
-
-    const VtDictionary& customData = prim.GetCustomData();
-    for (auto& it: customData) {
-        FnKat::Attribute attr = PxrUsdKatanaUtils::ConvertVtValueToKatAttr(it.second);
-
-        if (!attr.isValid())
-        {
-            continue;
-        }
-
-        customDataBuilder.set(pystring::replace(it.first, ":", "."), attr);
-
-        foundCustomData = true;
-    }
-
-    return foundCustomData;
-}
-
 FnKat::Attribute
 PxrUsdKatanaGeomGetPrimvarGroup(
         const UsdGeomImageable& imageable,
@@ -1062,16 +1038,6 @@ PxrUsdKatanaReadPrim(
     if (_AddCustomProperties(prim, currentTime, customBuilder))
     {
         attrs.set("customProperties", customBuilder.build());
-    }
-
-    //
-    // Set the 'customData' attribute.
-    //
-
-    FnKat::GroupBuilder customDataBuilder;
-    if (_AddCustomData(prim, customDataBuilder))
-    {
-        attrs.set("usd.customData", customDataBuilder.build());
     }
 
     _AddExtraAttributesOrNamespaces(prim, data, attrs);

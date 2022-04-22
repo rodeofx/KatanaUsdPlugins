@@ -1,7 +1,7 @@
 # pylint: disable=invalid-name
 name = "KatanaUsdPlugins"
 
-version = "19.11_fn7"
+version = "19.11_fn8"
 
 authors = ["Pixar", "Foundry"]
 

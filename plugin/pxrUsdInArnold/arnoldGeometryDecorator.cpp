@@ -1,4 +1,5 @@
 #include "pxr/pxr.h"
+#include "pxr/usd/usdLux/light.h"
 
 #include "usdKatana/utils.h"
 
@@ -16,7 +17,7 @@ PXRUSDKATANA_USDIN_PLUGIN_DEFINE(
         return;
     }
 
-    UsdPrim prim(privateData.GetUsdPrim());
+    const UsdPrim& prim = privateData.GetUsdPrim();
 
     static const std::unordered_map<std::string, std::string> arnoldStatementsMap = {
         {"primvars:arnold:transform_type", "arnoldStatements.transform_type"},
@@ -48,7 +49,52 @@ PXRUSDKATANA_USDIN_PLUGIN_DEFINE(
         {"primvars:arnold:sidedness:volume", "arnoldStatements.sidedness.AI_RAY_VOLUME"},
         {"primvars:arnold:sidedness:diffuse_reflect", "arnoldStatements.sidedness.AI_RAY_DIFFUSE_REFLECT"},
         {"primvars:arnold:sidedness:specular_reflect", "arnoldStatements.sidedness.AI_RAY_SPECULAR_REFLECT"},
+		{"primvars:arnold:samples", "arnoldLightStatements.samples"},
+		{"primvars:arnold:volume_samples", "arnoldLightStatements.volume_samples"},
+		{"primvars:arnold:cast_shadows", "arnoldLightStatements.cast_shadows"},
+		{"primvars:arnold:cast_volumetric_shadows", "arnoldLightStatements.cast_volumetric_shadows"},
+		{"primvars:arnold:shadow_density", "arnoldLightStatements.shadow_density"},
+		{"primvars:arnold:shadow_color", "arnoldLightStatements.shadow_color"},
+		{"primvars:arnold:camera", "arnoldLightStatements.camera"},
+		{"primvars:arnold:transmission", "arnoldLightStatements.transmission"},
+		{"primvars:arnold:diffuse", "arnoldLightStatements.diffuse"},
+		{"primvars:arnold:specular", "arnoldLightStatements.specular"},
+		{"primvars:arnold:sss", "arnoldLightStatements.sss"},
+		{"primvars:arnold:indirect", "arnoldLightStatements.indirect"},
+		{"primvars:arnold:volume", "arnoldLightStatements.volume"},
+		{"primvars:arnold:normalize", "arnoldLightStatements.normalize"},
+		{"primvars:arnold:max_bounces", "arnoldLightStatements.max_bounces"},
+		{"primvars:arnold:aov", "arnoldLightStatements.lightGroup"},
+		/*
+		{"primvars:arnold:angle", "material.arnoldLightShader.angle"},
+		{"primvars:arnold:portal", "material.arnoldLightShader.portal"},
+		{"primvars:arnold:portal_mode", "material.arnoldLightShader.portal_mode"},
+		{"primvars:arnold:resolution", "material.arnoldLightShader.resolution"},
+		{"primvars:arnold:roundness", "material.arnoldLightShader.angle"},
+		{"primvars:arnold:soft_edge", "material.arnoldLightShader.soft_edge"},
+		{"primvars:arnold:spread", "material.arnoldLightShader.spread"},
+		*/
     };
+
+    if(prim.IsA<UsdLuxLight>()){
+
+    	static const std::unordered_map<std::string, std::string> arnoldLightMap = {
+    		{"CylinderLight", "cylinder_light"},
+    		{"DiskLight", "spot_light"},
+			{"DistantLight", "distant_light"},
+    		{"GeometryLight", "mesh_light"},
+    		{"SphereLight", "point_light"},
+			{"RectLight", "quad_light"},
+			{"DomeLight", "skydome_light"},
+    	};
+
+		std::unordered_map<std::string, std::string>::const_iterator arnoldLight =
+				arnoldLightMap.find(prim.GetTypeName());
+    	if(arnoldLight != arnoldLightMap.end()){
+			interface.setAttr("material.arnoldLightShader",
+					FnKat::StringAttribute(arnoldLight->second));
+    	}
+    }
 
     // TODO: Should we check if the location type is a polymesh or subdmesh ?
     UsdAttribute usdAttr;

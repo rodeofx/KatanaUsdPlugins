@@ -25,12 +25,14 @@ function(add_boost_interface)
     if(USE_KATANA_BOOST)
         # Setup the variables to use the Katana builds.
         set(BOOST_LIBRARYDIR ${KATANA_API_LOCATION}/bin)
-        set(BOOST_INCLUDEDIR ${KATANA_API_LOCATION}/external/FnBoost/include)
+        set(BOOST_INCLUDEDIR ${KATANA_API_LOCATION}/external/foundryboost/include)
         set(Boost_NO_SYSTEM_PATHS ON)
-        set(Boost_NAMESPACE Fnboost)
+        set(Boost_NAMESPACE foundryboost)
         set(Boost_USE_STATIC_LIBS OFF)
     endif()
-    find_package(Boost COMPONENTS filesystem python thread system regex REQUIRED)
+    
+    find_package(Boost COMPONENTS filesystem python27 thread system regex REQUIRED)
+    
 endfunction(add_boost_interface) #add_python_interface
 
 
@@ -107,7 +109,7 @@ function(add_tbb_interface)
             set_target_properties(TBB::tbb
                 PROPERTIES
                     INTERFACE_INCLUDE_DIRECTORIES
-                        "${KATANA_API_LOCATION}/external/FnTBB/include"
+                        "${KATANA_API_LOCATION}/external/tbb/include"
                     INTERFACE_COMPILE_DEFINITIONS
                         "__TBB_NO_IMPLICIT_LINKAGE=1"
             )
@@ -115,7 +117,7 @@ function(add_tbb_interface)
                 set_target_properties(TBB::tbb
                     PROPERTIES
                         INTERFACE_LINK_LIBRARIES
-                            "${KATANA_API_LOCATION}/bin/libtbb2017_Foundry.so.2"
+                            "${KATANA_API_LOCATION}/bin/libtbbmalloc_proxy.so.2"
                 )
             elseif(WIN32)
                 set_target_properties(TBB::tbb
@@ -152,7 +154,7 @@ function(add_usd_interface)
         set(USD_LIBRARY_DIR ${KATANA_API_LOCATION}/bin)
         set(USD_INCLUDE_DIR ${KATANA_API_LOCATION}/external/FnUSD/include)
         if(UNIX)
-            set(PXR_LIB_PREFIX libFn)
+            set(PXR_LIB_PREFIX libfn)
         endif()
         find_package(USD REQUIRED)
     elseif(USE_FOUNDRY_FIND_USD)

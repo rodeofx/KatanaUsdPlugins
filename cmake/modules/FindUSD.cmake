@@ -78,7 +78,7 @@ foreach(lib ${USD_LIBRARIES})
         # Probably adding more dependencies than are required to some
         # libraries.
         set(LIBS ${USD_${lib}_PATH}
-            Boost::python
+            Boost::python27
             Boost::thread
             Boost::system
             Boost::regex

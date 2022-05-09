@@ -15,9 +15,9 @@ description = """
 requires = ["platform-linux", "katana"]
 
 variants = [
-    ["katana-4.0"],
+    #["katana-4.0"],
     # FIXME: not building because external/FnBoost and external/FnTBB renamed... grrr
-    # ["katana-4.5"],
+    ["devtoolset-6", "katana-4.5"],
 ]
 
 private_build_requires = ["cmake-3.12+"]

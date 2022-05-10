@@ -35,6 +35,7 @@ option(ENABLE_USD_EXPORT "Enables building and installing the \
 option(ENABLE_USD_RENDER_INFO_PLUGIN "Enables building and installing the \
     UsdRenderInfoPlugin subdirectory and supporting logic." ON)
 
+
 add_subdirectory(lib)
 add_subdirectory(plugin)
 add_subdirectory(python)
